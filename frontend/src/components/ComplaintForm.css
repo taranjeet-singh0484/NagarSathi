@@ -1,0 +1,381 @@
+/* ================================
+   Complaint Form - Main Container
+================================ */
+.complaint-form-container {
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ================================
+   Complaint Form Card
+================================ */
+.complaint-form-card {
+  width: 100%;
+  max-width: 800px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+}
+
+.complaint-form-card h2 {
+  color: #2d3748;
+  margin-bottom: 10px;
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.form-subtitle {
+  color: #4a5568;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* ================================
+   Form Layout
+================================ */
+.complaint-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+/* ================================
+   Inputs (Text, Textarea)
+================================ */
+.form-group input,
+.form-group textarea {
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-family: inherit;
+  background: #fff;
+  color: black;
+}
+
+/* ================================
+   Select (Dropdown)
+================================ */
+.form-group select {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  line-height: 1.4;
+  height: 45px;
+  background: #fff;
+  /* Custom dropdown arrow */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  color: #2d3748;
+  font-weight: 500;
+}
+
+/* Placeholder option (disabled look) */
+.form-group select option[value=""] {
+  color: #a0aec0;
+  font-style: italic;
+}
+
+/* Highlighted style when value selected */
+.form-group select.has-value {
+  background-color: #f0f9ff;
+  border-color: #667eea;
+  color: #1e40af;
+  font-weight: 600;
+}
+
+/* ================================
+   Selected Category Display
+================================ */
+.selected-category {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #ecfdf5;
+  border: 1px solid #10b981;
+  border-radius: 6px;
+  color: #065f46;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.selected-category::before {
+  content: "✓";
+  color: #10b981;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* ================================
+   Focus States
+================================ */
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group select:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+/* Dropdown option styling */
+.form-group option {
+  padding: 10px;
+  background: #fff;
+  color: #2d3748;
+  font-size: 1rem;
+}
+
+.form-group select option:checked {
+  background: #667eea;
+  color: #fff;
+  font-weight: 600;
+}
+
+.form-group select option:hover {
+  background: #edf2f7;
+}
+
+/* ================================
+   Error Styles
+================================ */
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
+  border-color: #e74c3c;
+}
+
+/* ================================
+   Textarea
+================================ */
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* ================================
+   File Input
+================================ */
+.file-input {
+  padding: 8px 12px;
+  border: 2px dashed #e2e8f0;
+  background: #f7fafc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.file-input:hover {
+  border-color: #667eea;
+  background: #edf2f7;
+}
+
+.photo-hint {
+  display: block;
+  margin-top: 6px;
+  color: #718096;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+/* ================================
+   Error / Success Messages
+================================ */
+.error-text {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+.error-message {
+  background: #fdf2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 14px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.success-message {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  padding: 14px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+/* ================================
+   Form Actions (Buttons)
+================================ */
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.form-actions .btn {
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.form-actions .btn-secondary {
+  background: #e2e8f0;
+  color: #4a5568;
+}
+
+.form-actions .btn-secondary:hover {
+  background: #cbd5e0;
+  transform: translateY(-2px);
+}
+
+.form-actions .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+}
+
+.form-actions .btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+}
+
+.form-actions .btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ================================
+   Category Badges
+================================ */
+.category-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.category-badge.infrastructure {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.category-badge.safety {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.category-badge.environmental {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.category-badge.transportation {
+  background: #e0e7ff;
+  color: #7c3aed;
+}
+
+.category-badge.utilities {
+  background: #fce7f3;
+  color: #be185d;
+}
+
+.category-badge.noise {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.category-badge.other {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+/* ================================
+   Responsive Styles
+================================ */
+@media (max-width: 768px) {
+  .complaint-form-container {
+    padding: 20px 15px;
+  }
+
+  .complaint-form-card {
+    padding: 30px 20px;
+  }
+
+  .complaint-form-card h2 {
+    font-size: 1.6rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .complaint-form-card {
+    padding: 25px 15px;
+  }
+
+  .complaint-form-card h2 {
+    font-size: 1.4rem;
+  }
+
+  .form-subtitle {
+    font-size: 1rem;
+  }
+}

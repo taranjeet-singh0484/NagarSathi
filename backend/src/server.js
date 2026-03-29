@@ -1,0 +1,54 @@
+import express from "express";
+import dotenv from "dotenv";
+dotenv.config({ path: "./backend/.env" });
+import cors from "cors";
+import morgan from "morgan";
+import { connectDB } from "./config/db.js";
+connectDB();
+import complaintRoutes from "./routes/complaintRoutes.js";
+import { errorHandler } from "./middleware/errorHandler.js";
+import authRoutes from "./routes/authRoutes.js";
+import path from "path";
+
+
+// Initialize Express app
+const app = express();
+
+const _dirname = path.resolve();
+
+// Middleware setup (e.g., body parsing, CORS)
+//cors configured
+const corsOptions = {
+  origin: [
+    "http://localhost:5173",   // Vite
+    "http://localhost:3000",   // CRA or fallback
+    "http://localhost:4173",   // Vite preview
+  ],
+  methods: ["GET", "POST", "PATCH", "DELETE"],
+  credentials: true, // Allow credentials (cookies, authorization headers, etc.) to be sent
+}
+app.use(cors(corsOptions));
+app.use(morgan("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Serve uploaded files
+app.use('/uploads', express.static('uploads'));
+
+// Route definitions
+app.use("/api/complaints", complaintRoutes);
+app.use("/api/auth", authRoutes);
+
+// Error handling middleware
+app.use(errorHandler);
+
+app.use(express.static(path.join(_dirname, "frontend/dist")));
+app.get("/*splat", (_, res) => {
+  res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"));
+});
+
+// Start the server and listen on the specified port
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
