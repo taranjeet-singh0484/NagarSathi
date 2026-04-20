@@ -20,13 +20,14 @@ const _dirname = path.resolve();
 //cors configured
 const corsOptions = {
   origin: [
-    "http://localhost:5173",   // Vite
-    "http://localhost:3000",   // CRA or fallback
-    "http://localhost:4173",   // Vite preview
+    "http://localhost:5173", // Vite
+    "http://localhost:3000", // CRA or fallback
+    "http://localhost:4173", // Vite preview
+    "https://nagar-sathi-phi.vercel.app/",
   ],
   methods: ["GET", "POST", "PATCH", "DELETE"],
   credentials: true, // Allow credentials (cookies, authorization headers, etc.) to be sent
-}
+};
 app.use(cors(corsOptions));
 app.use(morgan("dev"));
 app.use(express.json());
