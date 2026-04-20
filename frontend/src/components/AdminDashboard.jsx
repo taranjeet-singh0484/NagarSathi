@@ -24,6 +24,9 @@ const AdminDashboard = () => {
   // Stores temporary edit data (status, resolution note) per complaint
   const [editStates, setEditStates] = useState({});
 
+  //Sorting order
+  const [sortOrder, setSortOrder] = useState("latest");    //by default latest
+
   // Fetch complaints once when component mounts
   useEffect(() => {
     fetchComplaints();
@@ -32,7 +35,7 @@ const AdminDashboard = () => {
   // Re-run filter when complaints or filters change
   useEffect(() => {
     filterComplaints();
-  }, [complaints, searchTerm, statusFilter, categoryFilter]);
+  }, [complaints, searchTerm, statusFilter, sortOrder,  categoryFilter]);
 
   // Fetch complaints from backend
   const fetchComplaints = async () => {
@@ -51,8 +54,8 @@ const AdminDashboard = () => {
 
   // Apply search & filters on complaints
   const filterComplaints = () => {
-    let filtered = complaints;
-
+   let filtered = [...complaints];
+   
     // Search filter (ID, name, description, location, ward)
     if (searchTerm) {
       filtered = filtered.filter(complaint =>
@@ -74,6 +77,14 @@ const AdminDashboard = () => {
       filtered = filtered.filter(complaint => complaint.category === categoryFilter);
     }
 
+    if (sortOrder === "latest") {
+      filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    } else if (sortOrder === "oldest") {
+      filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    } else if (sortOrder === "updated") {
+      filtered.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    }
+    
     setFilteredComplaints(filtered);
   };
 
@@ -267,7 +278,7 @@ const AdminDashboard = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          
+
           {/* Status & Category Filters */}
           <div className="filter-controls">
             <select
@@ -280,17 +291,30 @@ const AdminDashboard = () => {
               <option value="In Progress">In Progress</option>
               <option value="Resolved">Resolved</option>
             </select>
-            
+
             <select
               className="filter-select"
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
             >
               <option value="all">All Categories</option>
-              {categories.map(category => (
-                <option key={category} value={category}>{category}</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
               ))}
             </select>
+
+            <select
+              className="filter-select"
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <option value="latest">Latest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="updated">Recently Updated</option>
+            </select>
+
           </div>
         </div>
       </div>
@@ -330,14 +354,18 @@ const AdminDashboard = () => {
 
                 {/* Category Badge */}
                 <td>
-                  <span className={`category-badge ${getCategoryColor(complaint.category)}`}>
+                  <span
+                    className={`category-badge ${getCategoryColor(complaint.category)}`}
+                  >
                     {complaint.category}
                   </span>
                 </td>
 
                 {/* Description + Photo Indicator */}
                 <td className="description-cell">
-                  <div className="description-text">{complaint.description}</div>
+                  <div className="description-text">
+                    {complaint.description}
+                  </div>
                   {complaint.photoUrl && (
                     <div className="photo-indicator">📷</div>
                   )}
@@ -345,7 +373,9 @@ const AdminDashboard = () => {
 
                 {/* Status Badge */}
                 <td>
-                  <span className={`status-badge ${getStatusColor(complaint.status)}`}>
+                  <span
+                    className={`status-badge ${getStatusColor(complaint.status)}`}
+                  >
                     {complaint.status}
                   </span>
                 </td>
@@ -360,8 +390,10 @@ const AdminDashboard = () => {
                     {/* Status Select */}
                     <select
                       className="status-select"
-                      value={editStates[complaint._id]?.status || ''}
-                      onChange={(e) => updateEditState(complaint._id, 'status', e.target.value)}
+                      value={editStates[complaint._id]?.status || ""}
+                      onChange={(e) =>
+                        updateEditState(complaint._id, "status", e.target.value)
+                      }
                       onFocus={() => initializeEditState(complaint._id)}
                     >
                       <option value="">Select Status</option>
@@ -369,29 +401,37 @@ const AdminDashboard = () => {
                       <option value="In Progress">In Progress</option>
                       <option value="Resolved">Resolved</option>
                     </select>
-                    
+
                     {/* Resolution Note (only when Resolved) */}
-                    {editStates[complaint._id]?.status === 'Resolved' && (
+                    {editStates[complaint._id]?.status === "Resolved" && (
                       <textarea
                         className="resolution-note-input"
                         placeholder="Enter resolution note..."
-                        value={editStates[complaint._id]?.resolutionNote || ''}
-                        onChange={(e) => updateEditState(complaint._id, 'resolutionNote', e.target.value)}
+                        value={editStates[complaint._id]?.resolutionNote || ""}
+                        onChange={(e) =>
+                          updateEditState(
+                            complaint._id,
+                            "resolutionNote",
+                            e.target.value,
+                          )
+                        }
                         onFocus={() => initializeEditState(complaint._id)}
                         rows="3"
                       />
                     )}
-                    
+
                     {/* Update Button */}
                     <button
                       className="update-status-btn"
                       onClick={() => handleStatusUpdate(complaint._id)}
                       disabled={updatingStatus === complaint._id}
                     >
-                      {updatingStatus === complaint._id ? 'Updating...' : 'Update'}
+                      {updatingStatus === complaint._id
+                        ? "Updating..."
+                        : "Update"}
                     </button>
                   </div>
-                  
+
                   {/* Show resolution note if available */}
                   {complaint.resolutionNote && (
                     <div className="resolution-note-display">
@@ -403,17 +443,17 @@ const AdminDashboard = () => {
             ))}
           </tbody>
         </table>
-        
+
         {/* If no complaints match filters */}
         {filteredComplaints.length === 0 && (
           <div className="no-complaints">
             <p>No complaints found matching the current filters.</p>
-            <button 
+            <button
               onClick={() => {
-                setSearchTerm('');
-                setStatusFilter('all');
-                setCategoryFilter('all');
-              }} 
+                setSearchTerm("");
+                setStatusFilter("all");
+                setCategoryFilter("all");
+              }}
               className="clear-filters-btn"
             >
               Clear All Filters
