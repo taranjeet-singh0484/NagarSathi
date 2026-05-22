@@ -163,7 +163,11 @@ const ComplaintForm = () => {
       }, 2000);
     } catch (error) {
       // Handle API error
-      setErrorMessage(error.message || 'Failed to submit complaint. Please try again.');
+      setErrorMessage(
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to submit complaint. Please try again.",
+      );
     } finally {
       setIsLoading(false);
     }

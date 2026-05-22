@@ -126,14 +126,17 @@
 }
 
 /* Complaint ID */
-.complaint-id {
+.complaints-grid .complaint-card .complaint-header .complaint-id {
   font-family: 'Courier New', monospace;
   font-size: 0.9rem;
   color: #64748b;
   font-weight: 600;
   background: #e2e8f0;
-  padding: 4px 8px;
   border-radius: 4px;
+  padding: 6px 12px; 
+  display: inline-block;
+  white-space: nowrap;
+  width: max-content;
 }
 
 /* Complaint status badge */

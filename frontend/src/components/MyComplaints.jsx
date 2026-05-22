@@ -171,9 +171,7 @@ const MyComplaints = () => {
           <div key={complaint._id} className="complaint-card">
             {/* Complaint header (ID + status badge) */}
             <div className="complaint-header">
-              <div className="complaint-id">
-                ID: {complaint.complaintId}
-              </div>
+              <div className="complaint-id">ID: {complaint.complaintId}</div>
               <span
                 className={`status-badge ${getStatusColor(complaint.status)}`}
               >
@@ -203,7 +201,7 @@ const MyComplaints = () => {
                   <span className="detail-label">Category:</span>
                   <span
                     className={`category-badge ${getCategoryColor(
-                      complaint.category
+                      complaint.category,
                     )}`}
                   >
                     {complaint.category}
@@ -264,7 +262,7 @@ const MyComplaints = () => {
         <div className="no-results">
           <p>No complaints found with the selected status.</p>
           <button
-            onClick={() => setStatusFilter('all')}
+            onClick={() => setStatusFilter("all")}
             className="clear-filter-btn"
           >
             Show All Complaints

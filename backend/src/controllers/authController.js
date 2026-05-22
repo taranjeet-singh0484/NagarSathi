@@ -44,7 +44,7 @@ export const register = async (req, res) => {
   }
 };
 
-// POST /api/auth/login
+// POST/api/auth/login
 export const login = async (req, res, next) => {
   try {
     const errors = validationResult(req);

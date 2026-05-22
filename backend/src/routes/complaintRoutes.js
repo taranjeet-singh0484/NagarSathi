@@ -7,11 +7,17 @@ import {
   updateComplaintStatus,
 } from "../controllers/complaintController.js";
 import { protect, requireRole } from "../middleware/auth.js";
+import fs from "fs";
 
+const uploadPath = path.join(process.cwd(), "uploads");
+
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, { recursive: true });
+}
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/');
+    cb(null, path.join(process.cwd(), "uploads"));
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);

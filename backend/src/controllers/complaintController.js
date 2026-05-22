@@ -1,14 +1,33 @@
 import Complaint from "../models/Complaint.js";
-
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 // @desc Create new complaint
+
 export const createComplaint = async (req, res, next) => {
   try {
     const complaintData = { ...req.body, user: req.user.id };
+
+    console.log("REQ FILE:", req.file);
+    // console.log("Uploading path:", localFilePath);
+    // console.log("File exists:", fs.existsSync(localFilePath));
+    console.log("Cloud name:", process.env.CLOUDINARY_CLOUD_NAME);
+    console.log("Cloud API KEY:", process.env.CLOUDINARY_CLOUD_API_KEY);
+    console.log("Cloud API SECRET:", process.env.CLOUDINARY_CLOUD_API_SECRET);
     
-    // Handle photo upload
-    if (req.file) {
-      complaintData.photoUrl = `/uploads/${req.file.filename}`;
+  if (req.file) {
+    try {
+      const uploadedPhoto = await uploadOnCloudinary(req.file.path);
+
+      console.log("Uploaded photo:", uploadedPhoto);
+
+      complaintData.photoUrl = uploadedPhoto.secure_url;
+    } catch (error) {
+      console.log("Error uploading photo:", error);
+
+      return res.status(500).json({
+        message: "Failed to upload photo",
+      });
     }
+  }
     
     const complaint = await Complaint.create(complaintData);
     res.status(201).json(complaint);

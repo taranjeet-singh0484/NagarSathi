@@ -1,117 +1,183 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { getUserRole } from '../services/api';
-import './Home.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import { getUserRole } from "../services/api";
+import "./Home.css";
 
 const Home = () => {
-  // Get role of logged-in user (citizen / admin) from API helper
   const userRole = getUserRole();
-
-  // Fetch stored user details from localStorage
-  const userName = localStorage.getItem('userName');
-  const token = localStorage.getItem('token');
-
-  // Debug: log localStorage info for testing
-  console.log('Home page localStorage check:', {
-    userRole,
-    userName,
-    hasToken: !!token,
-    tokenLength: token ? token.length : 0
-  });
+  const userName = localStorage.getItem("userName");
 
   return (
-    <div className="home-container">
-      <div className="home-content">
-        
-        {/* -------- Hero Section -------- */}
-        <div className="hero-section">
-          <h1>Citizen Resolution System</h1>
-          <p className="hero-subtitle">
-            Report and track community issues efficiently. Your voice matters in building a better community.
-          </p>
-          
-          {/* If user is logged in, show welcome message, else show login/register buttons */}
+    <div className="dashboard-container">
+      {/* Sidebar Glow */}
+      <div className="dashboard-overlay"></div>
+
+      <div className="dashboard-content">
+        {/* ===== HEADER ===== */}
+        <div className="dashboard-header">
+          <div>
+            <h1>Citizen Resolution System</h1>
+            <p>Smart complaint management platform for better communities.</p>
+          </div>
+
           {userRole && userName ? (
-            <div className="welcome-message">
-              <p>Welcome back, {userName}! ({userRole})</p>
-              {/* Show partial token for debugging/confirmation */}
-              <p>Token: {token ? `${token.substring(0, 20)}...` : 'None'}</p>
+            <div className="profile-box">
+              <div className="profile-avatar">
+                {userName.charAt(0).toUpperCase()}
+              </div>
+l
+              <div>
+                <h3>{userName}</h3>
+                <span>{userRole}</span>
+              </div>
             </div>
           ) : (
-            <div className="cta-buttons">
-              <Link to="/login" className="cta-btn primary">Login</Link>
-              <Link to="/register" className="cta-btn secondary">Register</Link>
+            <div className="header-buttons">
+              <Link to="/login" className="primary-btn">
+                Login
+              </Link>
+
+              <Link to="/register" className="secondary-btn">
+                Register
+              </Link>
             </div>
           )}
         </div>
 
-        {/* -------- Features Section -------- */}
+        {/* ===== HERO ===== */}
+        <div className="hero-card">
+          <div className="hero-left">
+            <h2>Building Better Communities Together</h2>
+
+            <p>
+              Submit complaints, track resolutions, and help improve your
+              surroundings through an efficient digital governance platform.
+            </p>
+
+            {!userRole && (
+              <div className="hero-buttons">
+                <Link to="/register" className="cta-btn primary">
+                  Get Started
+                </Link>
+
+                <Link to="/login" className="cta-btn secondary">
+                  Sign In
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* RIGHT PROFESSIONAL PANEL */}
+          <div className="hero-info-panel">
+            <div className="info-box">
+              <span>✔</span>
+              <div>
+                <h4>Fast Complaint Resolution</h4>
+                <p>Track issues in real time with transparent updates.</p>
+              </div>
+            </div>
+
+            <div className="info-box">
+              <span>🔒</span>
+              <div>
+                <h4>Secure Authentication</h4>
+                <p>Your information remains protected and encrypted.</p>
+              </div>
+            </div>
+
+            <div className="info-box">
+              <span>📍</span>
+              <div>
+                <h4>Community Driven</h4>
+                <p>Citizens and authorities working together efficiently.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ===== QUICK ACTIONS ===== */}
         {userRole ? (
-          <div className="features-section">
-            <h2>Quick Actions</h2>
-            <div className="features-grid">
-              {/* Features for Citizen */}
-              {userRole === 'citizen' && (
+          <div className="section">
+            <div className="section-title">
+              <h2>Quick Actions</h2>
+            </div>
+
+            <div className="card-grid">
+              {userRole === "citizen" && (
                 <>
-                  <div className="feature-card">
-                    <div className="feature-icon">📝</div>
+                  <div className="dashboard-card">
+                    <div className="card-icon">📝</div>
+
                     <h3>Submit Complaint</h3>
-                    <p>Report a new issue in your community</p>
-                    <Link to="/submit-complaint" className="feature-link">Submit Now</Link>
+
+                    <p>
+                      Report road issues, sanitation problems, electricity
+                      faults, and more.
+                    </p>
+
+                    <Link to="/submit-complaint" className="card-btn">
+                      Submit Now
+                    </Link>
                   </div>
-                  
-                  <div className="feature-card">
-                    <div className="feature-icon">📊</div>
+
+                  <div className="dashboard-card">
+                    <div className="card-icon">📊</div>
+
                     <h3>My Complaints</h3>
-                    <p>Track the status of your submitted complaints</p>
-                    <Link to="/my-complaints" className="feature-link">View Complaints</Link>
+
+                    <p>
+                      Track all your submitted complaints and resolution status.
+                    </p>
+
+                    <Link to="/my-complaints" className="card-btn">
+                      View Complaints
+                    </Link>
                   </div>
                 </>
               )}
-              
-              {/* Features for Admin */}
-              {userRole === 'admin' && (
-                <div className="feature-card admin-feature">
-                  <div className="feature-icon">⚙️</div>
+
+              {userRole === "admin" && (
+                <div className="dashboard-card admin-card">
+                  <div className="card-icon">⚙️</div>
+
                   <h3>Admin Dashboard</h3>
-                  <p>Manage and monitor all citizen complaints</p>
-                  <Link to="/admin-dashboard" className="feature-link">Go to Dashboard</Link>
+
+                  <p>
+                    Manage complaints, assign priorities, and monitor issue
+                    resolutions.
+                  </p>
+
+                  <Link to="/admin-dashboard" className="card-btn">
+                    Open Dashboard
+                  </Link>
                 </div>
               )}
             </div>
           </div>
         ) : (
-          // Steps guide if user not logged in
-          <div className="features-section">
-            <h2>How It Works</h2>
-            <div className="steps-grid">
-              <div className="step">
-                <div className="step-number">1</div>
-                <h4>Register</h4>
-                <p>Create your account as a citizen</p>
-              </div>
-              <div className="step">
-                <div className="step-number">2</div>
-                <h4>Submit</h4>
-                <p>Report issues with details and photos</p>
-              </div>
-              <div className="step">
-                <div className="step-number">3</div>
-                <h4>Track</h4>
-                <p>Monitor progress and status updates</p>
-              </div>
+          <div className="section">
+            <div className="section-title">
+              <h2>How It Works</h2>
             </div>
-          </div>
-        )}
 
-        {/* -------- CTA Section (for guests only) -------- */}
-        {!userRole && (
-          <div className="cta-section">
-            <h2>Ready to Get Started?</h2>
-            <p>Join our community and help make a difference</p>
-            <div className="cta-buttons">
-              <Link to="/register" className="cta-btn primary">Create Account</Link>
-              <Link to="/login" className="cta-btn secondary">Sign In</Link>
+            <div className="steps-container">
+              <div className="step-card">
+                <div className="step-number">1</div>
+                <h3>Create Account</h3>
+                <p>Register securely and access the platform.</p>
+              </div>
+
+              <div className="step-card">
+                <div className="step-number">2</div>
+                <h3>Submit Issues</h3>
+                <p>Upload complaint details with photos and location.</p>
+              </div>
+
+              <div className="step-card">
+                <div className="step-number">3</div>
+                <h3>Track Progress</h3>
+                <p>Monitor complaint updates and resolution status.</p>
+              </div>
             </div>
           </div>
         )}
