@@ -63,16 +63,23 @@ const MyComplaints = () => {
 
   // Utility function: get CSS class based on category
   const getCategoryColor = (category) => {
-    const colors = {
-      'Roads & Infrastructure': 'category-infrastructure',
-      'Water Supply': 'category-water',
-      'Sanitation & Waste': 'category-sanitation',
-      'Street Lighting': 'category-lighting',
-      'Public Safety': 'category-safety',
-      'Environmental Issues': 'category-environmental',
-      'Noise Pollution': 'category-noise',
-      Other: 'category-other',
-    };
+ const colors = {
+   "Roads & Infrastructure": "category-infrastructure",
+   "Water Supply": "category-water",
+   "Sanitation & Waste": "category-sanitation",
+   "Street Lighting": "category-lighting",
+   "Public Safety": "category-safety",
+   "Environmental Issues": "category-environmental",
+   "Noise Pollution": "category-noise",
+   "Drainage & Sewage": "category-drainage",
+   "Traffic & Parking": "category-traffic",
+   "Illegal Construction": "category-construction",
+   "Stray Animals": "category-animals",
+   "Parks & Public Spaces": "category-parks",
+   "Government Staff Misconduct": "category-misconduct",
+
+   Other: "category-other",
+ };
     return colors[category] || 'category-other';
   };
 

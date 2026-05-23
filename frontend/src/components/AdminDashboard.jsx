@@ -83,10 +83,25 @@ const AdminDashboard = () => {
       filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     } else if (sortOrder === "updated") {
       filtered.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    }else if (sortOrder === "urgency") {   // add this block
+      const urgencyOrder = { critical: 0, high: 1, medium: 2, low: 3 };
+      filtered.sort((a, b) =>
+        (urgencyOrder[a.aiAnalysis?.urgency] ?? 2) -
+        (urgencyOrder[b.aiAnalysis?.urgency] ?? 2)
+      );
     }
-    
     setFilteredComplaints(filtered);
   };
+
+  const getUrgencyColor = (urgency) => {
+  switch (urgency) {
+    case 'critical': return 'urgency-critical';
+    case 'high':     return 'urgency-high';
+    case 'medium':   return 'urgency-medium';
+    case 'low':      return 'urgency-low';
+    default:         return 'urgency-medium';
+  }
+};
 
   // Initialize edit state for a complaint when admin focuses on dropdown
   const initializeEditState = (complaintId) => {
@@ -201,11 +216,13 @@ const AdminDashboard = () => {
   // Calculate dashboard stats
   const getStats = () => {
     const total = complaints.length;
-    const open = complaints.filter(c => c.status === 'Open').length;
-    const inProgress = complaints.filter(c => c.status === 'In Progress').length;
-    const resolved = complaints.filter(c => c.status === 'Resolved').length;
-    
-    return { total, open, inProgress, resolved };
+    const open = complaints.filter((c) => c.status === "Open").length;
+    const inProgress = complaints.filter((c) => c.status === "In Progress",).length;
+    const resolved = complaints.filter((c) => c.status === "Resolved").length;
+      const critical = complaints.filter((c) => c.aiAnalysis?.urgency === "critical",).length; 
+      const high = complaints.filter((c) => c.aiAnalysis?.urgency === "high",).length;   
+
+    return { total, open, inProgress, resolved ,critical , high};
   };
 
   const stats = getStats();
@@ -263,6 +280,14 @@ const AdminDashboard = () => {
           <div className="stat-number">{stats.resolved}</div>
           <div className="stat-label">Resolved</div>
         </div>
+        <div className="stat-card critical">
+          <div className="stat-number">{stats.critical}</div>
+          <div className="stat-label"> Critical</div>
+        </div>
+        <div className="stat-card high">
+          <div className="stat-number">{stats.high}</div>
+          <div className="stat-label"> High Urgency</div>
+        </div>
       </div>
 
       {/* Search & Filter controls */}
@@ -313,8 +338,8 @@ const AdminDashboard = () => {
               <option value="latest">Latest First</option>
               <option value="oldest">Oldest First</option>
               <option value="updated">Recently Updated</option>
+              <option value="urgency">By Urgency</option>
             </select>
-
           </div>
         </div>
       </div>
@@ -329,6 +354,7 @@ const AdminDashboard = () => {
               <th>Ward</th>
               <th>Location</th>
               <th>Category</th>
+              <th>Urgency</th>
               <th>Description</th>
               <th>Status</th>
               <th>Submitted</th>
@@ -359,6 +385,20 @@ const AdminDashboard = () => {
                   >
                     {complaint.category}
                   </span>
+                </td>
+
+                {/* Urgency Badge - ADD THIS */}
+                <td>
+                  <span
+                    className={`urgency-badge ${getUrgencyColor(complaint.aiAnalysis?.urgency)}`}
+                  >
+                    {complaint.aiAnalysis?.urgency?.toUpperCase() || "N/A"}
+                  </span>
+                  {complaint.aiAnalysis?.urgency_reason && (
+                    <div className="urgency-reason">
+                      {complaint.aiAnalysis.urgency_reason}
+                    </div>
+                  )}
                 </td>
 
                 {/* Description + Photo Indicator */}

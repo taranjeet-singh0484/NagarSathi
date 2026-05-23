@@ -14,6 +14,7 @@ import { connectDB } from "./config/db.js";
 import complaintRoutes from "./routes/complaintRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import aiRoutes from "./routes/aiRoutes.js"
 
 connectDB();
 
@@ -40,11 +41,24 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/complaints", complaintRoutes);
 app.use("/api/auth", authRoutes);
 
+app.use("/api/ai", aiRoutes);
+
 app.use(errorHandler);
 
 app.use(express.static(path.join(_dirname, "frontend/dist")));
 app.get("/*splat", (_, res) => {
   res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"));
+});
+
+
+app.get("/api/test-network", async (req, res) => {
+  try {
+    const r = await fetch("https://httpbin.org/get");
+    const data = await r.json();
+    res.json({ success: true, data });
+  } catch (err) {
+    res.json({ success: false, error: err.message, cause: err.cause?.message });
+  }
 });
 
 const PORT = process.env.PORT || 5000;

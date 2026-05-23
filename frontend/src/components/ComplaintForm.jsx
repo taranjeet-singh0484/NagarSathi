@@ -1,55 +1,109 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { complaintAPI } from '../services/api';
-import './ComplaintForm.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios"; // Imported for making the automatic AI API call
+import { complaintAPI } from "../services/api";
+import "./ComplaintForm.css";
 
 const ComplaintForm = () => {
   // State to store form field values
   const [formData, setFormData] = useState({
-    name: '',
-    ward: '',
-    location: '',
-    category: '',
-    description: '',
-    photo: null
+    name: "",
+    ward: "",
+    location: "",
+    category: "",
+    description: "",
+    photo: null,
   });
 
   // State for validation errors
   const [errors, setErrors] = useState({});
-  // State for loading spinner
+  // State for loading spinner during form submission
   const [isLoading, setIsLoading] = useState(false);
+  // State for loading status while the AI detects the category
+  const [isAiLoading, setIsAiLoading] = useState(false);
   // State for error/success messages
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   // Categories for dropdown
   const categories = [
-    'Roads & Infrastructure',
-    'Water Supply',
-    'Sanitation & Waste',
-    'Street Lighting',
-    'Public Safety',
-    'Environmental Issues',
-    'Noise Pollution',
-    'Other'
+    "Roads & Infrastructure",
+    "Water Supply",
+    "Sanitation & Waste",
+    "Street Lighting",
+    "Public Safety",
+    "Environmental Issues",
+    "Noise Pollution",
+    "Drainage & Sewage",
+    "Traffic & Parking",
+    "Illegal Construction",
+    "Stray Animals",
+    "Parks & Public Spaces",
+    "Government Staff Misconduct",
+    "Other",
   ];
+
+  // Handle automatic category classification based on user text description
+  const handleAutoDetectCategory = async (text) => {
+    // Only trigger detection if text is long enough to have significant context
+    if (!text || text.trim().length < 10) return;
+
+    setIsAiLoading(true);
+    try {
+      // Calls your newly created backend AI route endpoint
+      const response = await axios.post(
+        "http://localhost:5000/api/ai/detect-category",
+        { text },
+      );
+
+      if (response.data && response.data.success) {
+        const detectedCategory = response.data.data.category;
+
+        // Map any slight differences between raw AI output strings and dropdown array values if needed
+        let matchedCategory = categories.find(
+          (cat) => cat.toLowerCase() === detectedCategory.toLowerCase(),
+        );
+
+        // Fallback checks for near matches (like "Drainage Problems" mapping to "Drainage & Sewage")
+        if (!matchedCategory && detectedCategory.includes("Drainage")) {
+          matchedCategory = "Drainage & Sewage";
+        }
+
+        if (matchedCategory) {
+          setFormData((prev) => ({
+            ...prev,
+            category: matchedCategory,
+          }));
+
+          // Clear any active manual category validation errors if the AI resolves it
+          if (errors.category) {
+            setErrors((prev) => ({ ...prev, category: "" }));
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Failed to auto-detect complaint category:", error);
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
 
   // Handle text input & select field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     console.log(`Field ${name} changed to:`, value); // Debug log
-    
+
     // Update state dynamically
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
     // Clear error message for that field when user types
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
@@ -59,29 +113,29 @@ const ComplaintForm = () => {
     const file = e.target.files[0];
     if (file) {
       // Ensure file is an image
-      if (!file.type.startsWith('image/')) {
-        setErrors(prev => ({
+      if (!file.type.startsWith("image/")) {
+        setErrors((prev) => ({
           ...prev,
-          photo: 'Please select an image file'
+          photo: "Please select an image file",
         }));
         return;
       }
       // Ensure file is less than 5MB
       if (file.size > 5 * 1024 * 1024) {
-        setErrors(prev => ({
+        setErrors((prev) => ({
           ...prev,
-          photo: 'Image size should be less than 5MB'
+          photo: "Image size should be less than 5MB",
         }));
         return;
       }
       // If valid, update state
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        photo: file
+        photo: file,
       }));
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        photo: ''
+        photo: "",
       }));
     }
   };
@@ -92,31 +146,31 @@ const ComplaintForm = () => {
 
     // Name validation
     if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = "Name is required";
     } else if (formData.name.trim().length < 2) {
-      newErrors.name = 'Name must be at least 2 characters long';
+      newErrors.name = "Name must be at least 2 characters long";
     }
 
     // Ward validation
     if (!formData.ward.trim()) {
-      newErrors.ward = 'Ward is required';
+      newErrors.ward = "Ward is required";
     }
 
     // Location validation
     if (!formData.location.trim()) {
-      newErrors.location = 'Location is required';
+      newErrors.location = "Location is required";
     }
 
     // Category validation
     if (!formData.category) {
-      newErrors.category = 'Please select a category';
+      newErrors.category = "Please select a category";
     }
 
     // Description validation
     if (!formData.description.trim()) {
-      newErrors.description = 'Description is required';
+      newErrors.description = "Description is required";
     } else if (formData.description.trim().length < 10) {
-      newErrors.description = 'Description must be at least 10 characters long';
+      newErrors.description = "Description must be at least 10 characters long";
     }
 
     // Update error state
@@ -129,8 +183,8 @@ const ComplaintForm = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage('');
-    setSuccessMessage('');
+    setErrorMessage("");
+    setSuccessMessage("");
 
     // Run validation
     if (!validateForm()) {
@@ -142,24 +196,26 @@ const ComplaintForm = () => {
     try {
       // Create FormData object to send text + file
       const formDataToSend = new FormData();
-      formDataToSend.append('name', formData.name.trim());
-      formDataToSend.append('ward', formData.ward.trim());
-      formDataToSend.append('location', formData.location.trim());
-      formDataToSend.append('category', formData.category);
-      formDataToSend.append('description', formData.description.trim());
+      formDataToSend.append("name", formData.name.trim());
+      formDataToSend.append("ward", formData.ward.trim());
+      formDataToSend.append("location", formData.location.trim());
+      formDataToSend.append("category", formData.category);
+      formDataToSend.append("description", formData.description.trim());
       if (formData.photo) {
-        formDataToSend.append('photo', formData.photo);
+        formDataToSend.append("photo", formData.photo);
       }
 
       // Call API to submit complaint
       await complaintAPI.createComplaint(formDataToSend);
-      
+
       // Show success message
-      setSuccessMessage('Complaint submitted successfully! Redirecting to your complaints...');
-      
+      setSuccessMessage(
+        "Complaint submitted successfully! Redirecting to your complaints...",
+      );
+
       // Redirect after 2 seconds
       setTimeout(() => {
-        navigate('/my-complaints');
+        navigate("/my-complaints");
       }, 2000);
     } catch (error) {
       // Handle API error
@@ -185,11 +241,12 @@ const ComplaintForm = () => {
 
         {/* Show error or success messages */}
         {errorMessage && <div className="error-message">{errorMessage}</div>}
-        {successMessage && <div className="success-message">{successMessage}</div>}
+        {successMessage && (
+          <div className="success-message">{successMessage}</div>
+        )}
 
         {/* Complaint Form */}
         <form onSubmit={handleSubmit} className="complaint-form">
-          
           {/* Name Input */}
           <div className="form-group">
             <label htmlFor="name">Your Name *</label>
@@ -199,7 +256,7 @@ const ComplaintForm = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={errors.name ? 'error' : ''}
+              className={errors.name ? "error" : ""}
               placeholder="Enter your full name"
             />
             {errors.name && <span className="error-text">{errors.name}</span>}
@@ -214,7 +271,7 @@ const ComplaintForm = () => {
               name="ward"
               value={formData.ward}
               onChange={handleChange}
-              className={errors.ward ? 'error' : ''}
+              className={errors.ward ? "error" : ""}
               placeholder="Enter your ward number or name"
             />
             {errors.ward && <span className="error-text">{errors.ward}</span>}
@@ -229,38 +286,12 @@ const ComplaintForm = () => {
               name="location"
               value={formData.location}
               onChange={handleChange}
-              className={errors.location ? 'error' : ''}
+              className={errors.location ? "error" : ""}
               placeholder="Enter specific location (street, landmark, etc.)"
             />
-            {errors.location && <span className="error-text">{errors.location}</span>}
-          </div>
-
-          {/* Category Dropdown */}
-          <div className="form-group">
-            <label htmlFor="category">Category *</label>
-            <select
-              id="category"
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              className={`${errors.category ? 'error' : ''} ${formData.category ? 'has-value' : ''}`}
-            >
-              <option value="">Select a category</option>
-              {categories.map(category => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-
-            {/* Show selected category */}
-            {formData.category && (
-              <div className="selected-category">
-                Selected: <strong>{formData.category}</strong>
-              </div>
+            {errors.location && (
+              <span className="error-text">{errors.location}</span>
             )}
-
-            {errors.category && <span className="error-text">{errors.category}</span>}
           </div>
 
           {/* Description */}
@@ -271,11 +302,50 @@ const ComplaintForm = () => {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className={errors.description ? 'error' : ''}
+              // TRIGGER: Automatically categorizes text when user focuses out of textarea
+              onBlur={() => handleAutoDetectCategory(formData.description)}
+              className={errors.description ? "error" : ""}
               placeholder="Describe the issue in detail..."
               rows="5"
             />
-            {errors.description && <span className="error-text">{errors.description}</span>}
+            {errors.description && (
+              <span className="error-text">{errors.description}</span>
+            )}
+          </div>
+
+          {/* Category Dropdown */}
+          <div className="form-group">
+            <label htmlFor="category">
+              Category *{" "}
+              {isAiLoading && (
+                <span className="ai-loading-text">✨ Auto-detecting...</span>
+              )}
+            </label>
+            <select
+              id="category"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className={`${errors.category ? "error" : ""} ${formData.category ? "has-value" : ""}`}
+            >
+              <option value="">Select a category</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+
+            {/* Show selected category status badge */}
+            {formData.category && (
+              <div className="selected-category">
+                Selected: <strong>{formData.category}</strong>
+              </div>
+            )}
+
+            {errors.category && (
+              <span className="error-text">{errors.category}</span>
+            )}
           </div>
 
           {/* Photo Upload */}
@@ -291,26 +361,26 @@ const ComplaintForm = () => {
             />
             {errors.photo && <span className="error-text">{errors.photo}</span>}
             <small className="photo-hint">
-              Upload a photo to help us better understand the issue. 
-              Supported formats: JPG, PNG, GIF. Max size: 5MB.
+              Upload a photo to help us better understand the issue. Supported
+              formats: JPG, PNG, GIF. Max size: 5MB.
             </small>
           </div>
 
           {/* Action Buttons */}
           <div className="form-actions">
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="btn btn-secondary"
-              onClick={() => navigate('/my-complaints')}
+              onClick={() => navigate("/my-complaints")}
             >
               Cancel
             </button>
-            <button 
-              type="submit" 
-              className="btn btn-primary" 
+            <button
+              type="submit"
+              className="btn btn-primary"
               disabled={isLoading}
             >
-              {isLoading ? 'Submitting...' : 'Submit Complaint'}
+              {isLoading ? "Submitting..." : "Submit Complaint"}
             </button>
           </div>
         </form>

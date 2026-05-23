@@ -26,9 +26,25 @@ const ComplaintSchema = new mongoose.Schema(
       enum: ["Open", "In Progress", "Resolved"],
       default: "Open",
     },
+
+    // AI-generated fields (hidden from citizen)
+    aiAnalysis: {
+      sentiment: {
+        type: String,
+        enum: ["positive", "negative", "neutral"],
+        default: "neutral",
+      },
+      urgency: {
+        type: String,
+        enum: ["low", "medium", "high", "critical"],
+        default: "medium",
+      },
+      urgency_reason: { type: String, default: "" },
+      category_confidence: { type: Number, default: 0 },
+    },
     resolutionNote: { type: String },
   },
-  { timestamps: true } // auto adds createdAt & updatedAt
+  { timestamps: true }, // auto adds createdAt & updatedAt
 );
 
 // Export Complaint model
