@@ -24,6 +24,7 @@ const ComplaintForm = () => {
   // State for error/success messages
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [duplicateWarning, setDuplicateWarning] = useState(null);
 
   // Categories for dropdown
   const categories = [
@@ -52,8 +53,10 @@ const ComplaintForm = () => {
     try {
       // Calls your newly created backend AI route endpoint
       const response = await axios.post(
-        "http://localhost:5000/api/ai/detect-category",
-        { text },
+        `${import.meta.env.VITE_API_URL}/ai/detect-category`,
+        {
+          text,
+        },
       );
 
       if (response.data && response.data.success) {
@@ -91,7 +94,7 @@ const ComplaintForm = () => {
   // Handle text input & select field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Field ${name} changed to:`, value); // Debug log
+    // console.log(`Field ${name} changed to:`, value); // Debug log
 
     // Update state dynamically
     setFormData((prev) => ({
@@ -181,20 +184,16 @@ const ComplaintForm = () => {
   };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, forceSubmit = false) => {
     e.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");
 
-    // Run validation
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setIsLoading(true);
 
     try {
-      // Create FormData object to send text + file
       const formDataToSend = new FormData();
       formDataToSend.append("name", formData.name.trim());
       formDataToSend.append("ward", formData.ward.trim());
@@ -204,26 +203,53 @@ const ComplaintForm = () => {
       if (formData.photo) {
         formDataToSend.append("photo", formData.photo);
       }
+      if (forceSubmit) {
+        formDataToSend.append("forceSubmit", "true"); // skip duplicate check
+      }
 
-      // Call API to submit complaint
-      await complaintAPI.createComplaint(formDataToSend);
+      const response = await complaintAPI.createComplaint(formDataToSend);
 
-      // Show success message
-      setSuccessMessage(
-        "Complaint submitted successfully! Redirecting to your complaints...",
-      );
+      // Duplicate warning returned from backend
+      if (response.isDuplicate) {
+        setDuplicateWarning(response.matchedComplaint);
+        setIsLoading(false);
+        return;
+      }
 
-      // Redirect after 2 seconds
-      setTimeout(() => {
-        navigate("/my-complaints");
-      }, 2000);
+      setSuccessMessage("Complaint submitted successfully! Redirecting...");
+      setTimeout(() => navigate("/my-complaints"), 2000);
     } catch (error) {
-      // Handle API error
       setErrorMessage(
         error.response?.data?.message ||
           error.message ||
           "Failed to submit complaint. Please try again.",
       );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmitAnyway = async () => {
+    setDuplicateWarning(null);
+    setIsLoading(true);
+
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", formData.name.trim());
+      formDataToSend.append("ward", formData.ward.trim());
+      formDataToSend.append("location", formData.location.trim());
+      formDataToSend.append("category", formData.category);
+      formDataToSend.append("description", formData.description.trim());
+      if (formData.photo) {
+        formDataToSend.append("photo", formData.photo);
+      }
+      formDataToSend.append("forceSubmit", "true");
+
+      await complaintAPI.createComplaint(formDataToSend);
+      setSuccessMessage("Complaint submitted successfully! Redirecting...");
+      setTimeout(() => navigate("/my-complaints"), 2000);
+    } catch (error) {
+      setErrorMessage("Failed to submit complaint. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -385,8 +411,88 @@ const ComplaintForm = () => {
           </div>
         </form>
       </div>
+
+      {/* Duplicate Warning Modal */}
+      {duplicateWarning && (
+        <div className="duplicate-modal-overlay">
+          <div className="duplicate-modal">
+            <div className="duplicate-modal-header">
+              <span className="duplicate-icon">⚠️</span>
+              <h3>Similar Complaint Already Exists</h3>
+            </div>
+
+            <p className="duplicate-modal-subtitle">
+              A similar complaint was already filed in your area:
+            </p>
+
+            <div className="duplicate-details">
+              <div className="duplicate-detail-row">
+                <span className="detail-label">Complaint ID</span>
+                <span className="detail-value">
+                  #{duplicateWarning.complaintId}
+                </span>
+              </div>
+              <div className="duplicate-detail-row">
+                <span className="detail-label">Category</span>
+                <span className="detail-value">
+                  {duplicateWarning.category}
+                </span>
+              </div>
+              <div className="duplicate-detail-row">
+                <span className="detail-label">Location</span>
+                <span className="detail-value">
+                  {duplicateWarning.location}
+                </span>
+              </div>
+              <div className="duplicate-detail-row">
+                <span className="detail-label">Ward</span>
+                <span className="detail-value">{duplicateWarning.ward}</span>
+              </div>
+              <div className="duplicate-detail-row">
+                <span className="detail-label">Status</span>
+                <span
+                  className={`status-badge status-${duplicateWarning.status.toLowerCase().replace(" ", "-")}`}
+                >
+                  {duplicateWarning.status}
+                </span>
+              </div>
+              <div className="duplicate-detail-row">
+                <span className="detail-label">Filed On</span>
+                <span className="detail-value">
+                  {new Date(duplicateWarning.createdAt).toLocaleDateString(
+                    "en-IN",
+                    {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    },
+                  )}
+                </span>
+              </div>
+            </div>
+
+            <p className="duplicate-note">
+              💡 Authorities are already aware of this issue. You can still
+              submit if your case is at a different spot or has additional
+              details.
+            </p>
+
+            <div className="duplicate-modal-actions">
+              <button
+                className="btn btn-secondary"
+                onClick={() => setDuplicateWarning(null)}
+              >
+                Cancel
+              </button>
+              <button className="btn btn-primary" onClick={handleSubmitAnyway}>
+                Submit Anyway
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
-};
+};;
 
 export default ComplaintForm;

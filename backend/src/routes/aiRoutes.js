@@ -1,5 +1,5 @@
 import express from "express";
-import { detectComplaintCategory } from "../../ai/categoryDetection.js";
+import { detectComplaintCategory } from "../ai/categoryDetection.js";
 
 const router = express.Router();
 

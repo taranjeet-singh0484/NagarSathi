@@ -1,39 +1,62 @@
 import Complaint from "../models/Complaint.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import { detectComplaintCategory } from "../../ai/categoryDetection.js";
-import { analyzeSentimentAndUrgency } from "../../ai/sentimentAnalysis.js";
+import { detectComplaintCategory } from "../ai/categoryDetection.js";
+import { analyzeSentimentAndUrgency } from "../ai/sentimentAnalysis.js";
+import { findDuplicateComplaint } from "../ai/duplicateDetection.js";
 
 // @desc Create new complaint
+
 export const createComplaint = async (req, res, next) => {
   try {
     const complaintData = { ...req.body, user: req.user.id };
 
-    // Upload photo if present
+    // Photo upload
     if (req.file) {
       try {
         const uploadedPhoto = await uploadOnCloudinary(req.file.path);
         complaintData.photoUrl = uploadedPhoto.secure_url;
       } catch (error) {
-        console.log("Error uploading photo:", error);
         return res.status(500).json({ message: "Failed to upload photo" });
       }
     }
 
-    // Run AI analysis in parallel
+    // ── Duplicate Check ──────────────────────────────
+    if (complaintData.forceSubmit !== "true") {
+      // ← ONLY change inside here
+      const recentComplaints = await Complaint.find({
+        ward: complaintData.ward,
+        category: complaintData.category,
+        createdAt: {
+          $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+        },
+      }).lean();
+
+      const duplicateResult = await findDuplicateComplaint(
+        complaintData,
+        recentComplaints,
+      );
+
+      if (duplicateResult.isDuplicate) {
+        return res.status(200).json({
+          isDuplicate: true,
+          matchedComplaint: duplicateResult.matchedComplaint,
+          message: "A similar complaint already exists in your area.",
+        });
+      }
+    }
+    delete complaintData.forceSubmit; // ← add this line here
+    // ── End Duplicate Check ──────────────────────────
+
+    // AI analysis
     const [categoryResult, sentimentResult] = await Promise.all([
       detectComplaintCategory(complaintData.description),
       analyzeSentimentAndUrgency(complaintData.description),
     ]);
 
-    console.log("AI Category:", categoryResult);
-    console.log("AI Sentiment/Urgency:", sentimentResult);
-
-    // Override category only if AI is confident enough
     if (categoryResult.confidence > 0.5) {
       complaintData.category = categoryResult.category;
     }
 
-    // Attach AI analysis
     complaintData.aiAnalysis = {
       sentiment: sentimentResult.sentiment,
       urgency: sentimentResult.urgency,
@@ -98,11 +121,9 @@ export const updateComplaintStatus = async (req, res, next) => {
     }
 
     if (status === "Resolved" && !resolutionNote) {
-      return res
-        .status(400)
-        .json({
-          message: "Resolution note is required when status is Resolved",
-        });
+      return res.status(400).json({
+        message: "Resolution note is required when status is Resolved",
+      });
     }
 
     const updatedComplaint = await Complaint.findByIdAndUpdate(
