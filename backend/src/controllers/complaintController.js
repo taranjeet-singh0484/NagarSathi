@@ -6,13 +6,6 @@ export const createComplaint = async (req, res, next) => {
   try {
     const complaintData = { ...req.body, user: req.user.id };
 
-    console.log("REQ FILE:", req.file);
-    // console.log("Uploading path:", localFilePath);
-    // console.log("File exists:", fs.existsSync(localFilePath));
-    console.log("Cloud name:", process.env.CLOUDINARY_CLOUD_NAME);
-    console.log("Cloud API KEY:", process.env.CLOUDINARY_CLOUD_API_KEY);
-    console.log("Cloud API SECRET:", process.env.CLOUDINARY_CLOUD_API_SECRET);
-    
   if (req.file) {
     try {
       const uploadedPhoto = await uploadOnCloudinary(req.file.path);
