@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import ComplaintForm from './components/ComplaintForm';
 import MyComplaints from './components/MyComplaints';
 import AdminDashboard from './components/AdminDashboard';
+import ChatWidget from "./components/ChatWidget"; 
 import { getToken, getUserRole } from './services/api';
 import './App.css';
 
@@ -38,6 +39,8 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
 };
 
 function App() {
+  const token = getToken();
+  const userRole = getUserRole();
   return (
     <Router>
       <div className="App">
@@ -47,34 +50,35 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route 
-              path="/submit-complaint" 
+            <Route
+              path="/submit-complaint"
               element={
                 <ProtectedRoute>
                   <ComplaintForm />
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/my-complaints" 
+            <Route
+              path="/my-complaints"
               element={
                 <ProtectedRoute>
                   <MyComplaints />
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/admin-dashboard" 
+            <Route
+              path="/admin-dashboard"
               element={
-                <ProtectedRoute allowedRoles={['admin']}>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <AdminDashboard />
                 </ProtectedRoute>
-              } 
+              }
             />
             {/* Catch all route - redirect to home */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
+        {token && userRole === "citizen" && <ChatWidget />}
       </div>
     </Router>
   );

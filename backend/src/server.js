@@ -15,6 +15,7 @@ import complaintRoutes from "./routes/complaintRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import aiRoutes from "./routes/aiRoutes.js"
+import chatRoutes from "./routes/chatRoutes.js";
 
 connectDB();
 
@@ -50,6 +51,7 @@ app.get("/*splat", (_, res) => {
   res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"));
 });
 
+app.use("/api/chat", chatRoutes);
 
 app.get("/api/test-network", async (req, res) => {
   try {
