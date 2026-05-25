@@ -8,7 +8,12 @@ export const protect = (req, res, next) => {
     if (!token) return res.status(401).json({ message: "Not authorized, no token" });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = { id: decoded.id, role: decoded.role, email: decoded.email };
+    req.user = {
+      id: decoded.id,
+      role: decoded.role,
+      email: decoded.email,
+      adminStatus: decoded.adminStatus,
+    };
     next();
   } catch (err) {
     return res.status(401).json({ message: "Not authorized, token failed" });
@@ -20,5 +25,9 @@ export const requireRole = (role) => (req, res, next) => {
   if (!req.user || req.user.role !== role) {
     return res.status(403).json({ message: "Forbidden: insufficient role" });
   }
+
+   if (role === "admin" && req.user.adminStatus !== "approved") {
+     return res.status(403).json({ message: "Admin access pending approval" });
+   }
   next();
 };

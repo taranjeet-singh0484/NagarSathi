@@ -1,6 +1,12 @@
 import express from "express";
 import { body } from "express-validator";
-import { register, login, me } from "../controllers/authController.js";
+import passport from "../config/passport.js"; // ← add
+import {
+  register,
+  login,
+  me,
+  googleCallback,
+} from "../controllers/authController.js";
 import { protect } from "../middleware/auth.js";
 
 // Routes for user authentication (register, login, etc.)
@@ -27,6 +33,18 @@ router.post(
 );
 
 router.get("/me", protect, me);
+
+// ── Google OAuth routes ──────────────────── // ← add these
+router.get("/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+router.get("/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login", session: false }),
+  googleCallback
+);
+// ── End Google OAuth routes ──────────────────
+
 
 // Export authentication routes
 

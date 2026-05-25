@@ -1,26 +1,25 @@
-import dotenv from "dotenv";
-import { fileURLToPath } from "url";
-import path from "path";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-dotenv.config({ path: path.join(__dirname, "../.env") });
+import "./config/env.js"; // ← MUST be first import
 
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
+import session from "express-session";
+import passport from "./config/passport.js";
 import { connectDB } from "./config/db.js";
 import complaintRoutes from "./routes/complaintRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
-import aiRoutes from "./routes/aiRoutes.js"
+import aiRoutes from "./routes/aiRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
-
-connectDB();
+import { configurePassport } from "./config/passport.js";
+import adminRequestRoutes from "./routes/adminRequestRoutes.js";
+import path from "path";
 
 const app = express();
 const _dirname = path.resolve();
+
+connectDB();
+configurePassport(); 
 
 const corsOptions = {
   origin: [
@@ -37,21 +36,35 @@ app.use(cors(corsOptions));
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  session({
+    secret: process.env.JWT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 24 * 60 * 60 * 1000,
+    },
+  }),
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use("/uploads", express.static("uploads"));
 
 app.use("/api/complaints", complaintRoutes);
 app.use("/api/auth", authRoutes);
-
 app.use("/api/ai", aiRoutes);
-
-app.use(errorHandler);
+app.use("/api/chat", chatRoutes);
+app.use("/api/admin-requests", adminRequestRoutes);
 
 app.use(express.static(path.join(_dirname, "frontend/dist")));
 app.get("/*splat", (_, res) => {
   res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"));
 });
 
-app.use("/api/chat", chatRoutes);
+app.use(errorHandler);
 
 app.get("/api/test-network", async (req, res) => {
   try {

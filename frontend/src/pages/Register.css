@@ -1,219 +1,388 @@
-/* =======================
-   Register Page Container
-   ======================= */
+/* Container */
 .register-container {
-  min-height: 100vh; /* Full height screen */
-  width: 100%; /* Full width */
-  display: flex; /* Flex for centering */
-  align-items: center; /* Vertically center */
-  justify-content: center; /* Horizontally center */
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Nice gradient background */
-  padding: 20px;
-}
-
-/* =======================
-   Register Card (Main Box)
-   ======================= */
-.register-card {
-  background: white; /* White box */
-  border-radius: 12px; /* Rounded corners */
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); /* Soft shadow */
-  padding: 40px;
+  min-height: 100vh;
   width: 100%;
-  max-width: 500px; /* Bigger than login form */
-  text-align: center; /* Center text inside */
+  display: flex;
 }
 
-/* Card Heading */
-.register-card h2 {
-  color: #333;
-  margin-bottom: 10px;
-  font-size: 28px;
-  font-weight: 600;
+/* ── Left Panel ─────────────────────────── */
+.register-left {
+  flex: 1;
+  background: linear-gradient(145deg, #1e3a5f 0%, #2563eb 50%, #7c3aed 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Small Subtitle under heading */
-.register-subtitle {
-  color: #666;
-  margin-bottom: 30px;
-  font-size: 16px;
+.register-left::before {
+  content: '';
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+  top: -80px;
+  right: -80px;
 }
 
-/* =======================
-   Form Styling
-   ======================= */
-.register-form {
-  text-align: left; /* Labels align left */
+.register-left::after {
+  content: '';
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+  bottom: -60px;
+  left: -60px;
 }
 
-/* Each input group wrapper */
-.form-group {
-  margin-bottom: 20px;
-}
-
-/* Label for input/select */
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  color: #555;
-  font-weight: 500;
-  font-size: 14px;
-}
-
-/* Input + Select basic styling */
-.form-group input,
-.form-group select {
-  width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #e1e5e9; /* Light gray border */
-  border-radius: 8px;
-  font-size: 16px;
-  transition: border-color 0.3s ease;
-  box-sizing: border-box;
-  background-color: #fff;
-  color: #2d3748;
-  font-family: inherit;
-  font-weight: 500; /* Slightly bolder text */
-}
-
-/* Custom dropdown arrow for select */
-.form-group select {
-  background: white;
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-  background-position: right 12px center;
-  background-repeat: no-repeat;
-  background-size: 16px;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-/* Focus effect for inputs + selects */
-.form-group input:focus,
-.form-group select:focus {
-  outline: none;
-  border-color: #667eea; /* Blue border */
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); /* Glow effect */
-  background-color: #f8fafc; /* Slight grayish bg */
-}
-
-/* Placeholder styling */
-.form-group input::placeholder {
-  color: #a0aec0;
-  font-style: italic;
-}
-
-/* Inputs/Select with values */
-.form-group input.has-value,
-.form-group select.has-value {
-  background-color: #f0f9ff; /* Light blue background */
-  border-color: #667eea;
-  color: #1e40af;
-  font-weight: 600;
-}
-
-/* Error state for inputs/select */
-.form-group input.error,
-.form-group select.error {
-  border-color: #e74c3c; /* Red border */
-}
-
-/* Role hint text (e.g., citizen/admin hint) */
-.role-hint {
-  display: block;
-  margin-top: 5px;
-  color: #666;
-  font-size: 12px;
-  font-style: italic;
-}
-
-/* Error message under field */
-.error-text {
-  color: #e74c3c;
-  font-size: 12px;
-  margin-top: 5px;
-  display: block;
-}
-
-/* =======================
-   Register Button
-   ======================= */
-.register-btn {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.register-left-content {
+  position: relative;
+  z-index: 1;
   color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  margin-top: 10px;
+  max-width: 380px;
 }
 
-/* Hover effect */
-.register-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+.register-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
 }
 
-/* Disabled state */
-.register-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
+.register-brand-icon { font-size: 36px; }
 
-/* =======================
-   Error Message (General)
-   ======================= */
-.error-message {
-  background: #fdf2f2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-size: 14px;
-}
-
-/* =======================
-   Footer Section
-   ======================= */
-.register-footer {
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #e1e5e9;
-}
-
-.register-footer p {
-  color: #666;
-  font-size: 14px;
+.register-brand h1 {
+  font-size: 28px;
+  font-weight: 800;
+  color: white;
   margin: 0;
 }
 
-/* Link in footer */
+.register-left-content h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: white;
+}
+
+.register-left-content > p {
+  font-size: 15px;
+  opacity: 0.85;
+  line-height: 1.6;
+  margin-bottom: 36px;
+}
+
+/* Steps */
+.register-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.register-step {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255,255,255,0.1);
+  padding: 14px 16px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.step-text strong { display: block; font-size: 14px; }
+.step-text p { margin: 2px 0 0; font-size: 12px; opacity: 0.8; }
+
+/* ── Right Panel ─────────────────────────── */
+.register-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  padding: 40px 20px;
+  overflow-y: auto;
+}
+
+.register-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 36px;
+  width: 100%;
+  max-width: 460px;
+}
+
+.register-card-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.register-card-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e3a5f;
+  margin-bottom: 4px;
+}
+
+.register-card-header p {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Google Button */
+.google-btn {
+  width: 100%;
+  padding: 12px;
+  background: white;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 20px;
+}
+.google-btn:hover {
+  background: #f9fafb;
+  border-color: #2563eb;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.1);
+}
+
+/* Divider */
+.divider {
+  text-align: center;
+  margin: 16px 0;
+  position: relative;
+}
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e5e7eb;
+}
+.divider span {
+  background: white;
+  padding: 0 12px;
+  position: relative;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+/* Form */
+.register-form { text-align: left; }
+.form-group { margin-bottom: 16px; }
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: #374151;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 15px;
+  z-index: 1;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 11px 16px 11px 38px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: all 0.2s;
+  box-sizing: border-box;
+  color: #1e3a5f;
+  font-family: inherit;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+.form-group input::placeholder { color: #9ca3af; }
+.form-group input.error { border-color: #dc2626; }
+
+/* Password row — side by side */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Role Options */
+.role-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.role-option {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s;
+}
+
+.role-option:hover { border-color: #2563eb; background: #f0f7ff; }
+
+.role-option.active {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.role-icon { font-size: 20px; }
+.role-option strong { display: block; font-size: 13px; color: #1e3a5f; }
+.role-option p { margin: 2px 0 0; font-size: 11px; color: #6b7280; }
+
+.role-hint {
+  display: block;
+  font-size: 12px;
+  color: #d97706;
+  background: #fffbeb;
+  border-left: 3px solid #f59e0b;
+  padding: 8px 10px;
+  border-radius: 4px;
+  margin-top: 6px;
+}
+
+/* Error/Success */
+.error-text {
+  color: #dc2626;
+  font-size: 11px;
+  margin-top: 4px;
+  display: block;
+}
+
+.error-message {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.success-message {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #16a34a;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+/* Register Button */
+.register-btn {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+
+.register-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(37,99,235,0.3);
+}
+
+.register-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+.btn-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Footer */
+.register-footer {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+  color: #6b7280;
+  font-size: 13px;
+}
+
 .register-footer a {
-  color: #667eea;
+  color: #2563eb;
   text-decoration: none;
   font-weight: 500;
 }
 
-.register-footer a:hover {
-  text-decoration: underline;
-}
+.register-footer a:hover { text-decoration: underline; }
 
-/* =======================
-   Mobile Responsive
-   ======================= */
-@media (max-width: 480px) {
-  .register-card {
-    padding: 30px 20px;
-    margin: 10px;
+/* Mobile */
+@media (max-width: 768px) {
+  .register-container { flex-direction: column; }
+  .register-left {
+    padding: 32px 20px;
+    min-height: 220px;
   }
-  
-  .register-card h2 {
-    font-size: 24px;
-  }
+  .register-steps { display: none; }
+  .register-right { padding: 24px 16px; }
+  .register-card { padding: 24px 16px; }
+  .form-row { grid-template-columns: 1fr; }
 }
