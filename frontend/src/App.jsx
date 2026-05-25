@@ -53,7 +53,7 @@ function App() {
             <Route
               path="/submit-complaint"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["citizen"]}>
                   <ComplaintForm />
                 </ProtectedRoute>
               }
@@ -61,7 +61,7 @@ function App() {
             <Route
               path="/my-complaints"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["citizen"]}>
                   <MyComplaints />
                 </ProtectedRoute>
               }
