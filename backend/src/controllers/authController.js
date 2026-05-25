@@ -123,6 +123,35 @@ export const me = async (req, res, next) => {
   }
 };
 
+// POST /api/auth/set-password
+export const setPassword = async (req, res, next) => {
+  try {
+    const { password } = req.body;
+
+    if (!password || password.length < 6) {
+      return res.status(400).json({ 
+        message: "Password must be at least 6 characters" 
+      });
+    }
+
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (user.password) {
+      return res.status(400).json({ 
+        message: "Password already set. Use change password instead." 
+      });
+    }
+
+    user.password = password; // pre-save hook will hash it
+    await user.save();
+
+    res.status(200).json({ 
+      message: "Password set successfully! You can now login with email and password." 
+    });
+  } catch (err) { next(err); }
+};
+
 // GET /api/auth/google/callback
 export const googleCallback = async (req, res) => {
   try {
@@ -137,6 +166,7 @@ export const googleCallback = async (req, res) => {
         name: req.user.name,
         adminStatus: req.user.adminStatus,
       },
+      hasPassword: Boolean(req.user.password),
     };
 
     res.send(`

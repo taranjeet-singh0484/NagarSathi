@@ -6,6 +6,7 @@ import {
   login,
   me,
   googleCallback,
+  setPassword,
 } from "../controllers/authController.js";
 import { protect } from "../middleware/auth.js";
 
@@ -33,6 +34,8 @@ router.post(
 );
 
 router.get("/me", protect, me);
+router.post("/set-password", protect, setPassword);
+
 
 // ── Google OAuth routes ──────────────────── // ← add these
 router.get("/google",

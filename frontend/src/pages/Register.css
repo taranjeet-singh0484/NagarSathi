@@ -386,3 +386,159 @@
   .register-card { padding: 24px 16px; }
   .form-row { grid-template-columns: 1fr; }
 }
+
+/* Google Large Button */
+.google-btn-large {
+  width: 100%;
+  padding: 16px;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 24px;
+}
+.google-btn-large:hover {
+  background: #f9fafb;
+  border-color: #2563eb;
+  box-shadow: 0 4px 12px rgba(37,99,235,0.15);
+  transform: translateY(-1px);
+}
+.google-btn-large:disabled { opacity: 0.7; cursor: not-allowed; }
+
+/* Register Info */
+.register-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.info-item {
+  background: #f0fdf4;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #166534;
+}
+
+/* Admin Note */
+.admin-note {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #92400e;
+}
+.admin-note p { margin: 0; }
+
+/* Password Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.password-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.modal-header span { font-size: 40px; }
+.modal-header h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e3a5f;
+  margin: 8px 0 4px;
+}
+.modal-header p { color: #6b7280; font-size: 14px; }
+
+.modal-body h4 {
+  font-size: 16px;
+  color: #1e3a5f;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.optional-tag {
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.modal-subtitle {
+  color: #6b7280;
+  font-size: 13px;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.btn-skip {
+  flex: 1;
+  padding: 12px;
+  background: white;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-skip:hover { background: #f9fafb; border-color: #d1d5db; }
+
+.btn-set-password {
+  flex: 1;
+  padding: 12px;
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-set-password:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+.btn-set-password:disabled { opacity: 0.7; cursor: not-allowed; }
