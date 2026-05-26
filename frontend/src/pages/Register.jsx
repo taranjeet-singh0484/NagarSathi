@@ -235,7 +235,7 @@ const Register = () => {
               <div className="form-group">
                 <label>Password</label>
                 <div className="input-wrapper">
-                  <span className="input-icon">🔒</span>
+                  <span className="input-icon"></span>
                   <input
                     type="password"
                     placeholder="Min 6 characters"
@@ -248,7 +248,7 @@ const Register = () => {
               <div className="form-group">
                 <label>Confirm Password</label>
                 <div className="input-wrapper">
-                  <span className="input-icon">🔒</span>
+                  <span className="input-icon"></span>
                   <input
                     type="password"
                     placeholder="Repeat password"
