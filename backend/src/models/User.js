@@ -33,6 +33,14 @@ const UserSchema = new mongoose.Schema(
       default: null,
     },
 
+    notifications: [
+  {
+    message: String,
+    isRead: { type: Boolean, default: false },
+    createdAt: { type: Date, default: Date.now }
+  }
+],
+
     // Google OAuth field (for later)
     googleId: { type: String, default: null },
     avatar: { type: String, default: null },

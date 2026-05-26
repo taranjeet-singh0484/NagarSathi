@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { complaintAPI } from '../services/api';
 import './AdminDashboard.css';
+import AdminRequestPannel from "./AdminRequestPannel";
 
 const AdminDashboard = () => {
   // State to hold all complaints fetched from backend
@@ -260,6 +261,9 @@ const AdminDashboard = () => {
       <div className="admin-dashboard-header">
         <h1>Admin Dashboard</h1>
         <p>Manage and monitor all citizen complaints</p>
+      </div>
+      <div className="section">
+        <AdminRequestPanel />
       </div>
 
       {/* Stats section */}

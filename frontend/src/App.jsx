@@ -10,6 +10,7 @@ import AdminDashboard from './components/AdminDashboard';
 import ChatWidget from "./components/ChatWidget"; 
 import { getToken, getUserRole } from './services/api';
 import './App.css';
+import AdminRequestPanel from "./components/AdminRequestPannel";
 
 // Protected Route component
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
@@ -71,6 +72,15 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
                   <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+            //admin request panel route
+            <Route
+              path="/admin-requests"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AdminRequestPanel />
                 </ProtectedRoute>
               }
             />
