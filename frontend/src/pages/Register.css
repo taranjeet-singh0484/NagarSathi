@@ -93,7 +93,7 @@
   backdrop-filter: blur(10px);
 }
 
-.step-number {
+.reg-step-number {
   width: 32px;
   height: 32px;
   background: rgba(255,255,255,0.2);

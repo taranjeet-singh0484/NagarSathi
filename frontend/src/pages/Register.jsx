@@ -124,21 +124,21 @@ const Register = () => {
 
           <div className="register-steps">
             <div className="register-step">
-              <div className="step-number">1</div>
+              <div className="reg-step-number">1</div>
               <div className="step-text">
                 <strong>Sign up with Google</strong>
                 <p>One click secure registration</p>
               </div>
             </div>
             <div className="register-step">
-              <div className="step-number">2</div>
+              <div className="reg-step-number">2</div>
               <div className="step-text">
                 <strong>Report Issues</strong>
                 <p>File complaints about civic problems</p>
               </div>
             </div>
             <div className="register-step">
-              <div className="step-number">3</div>
+              <div className="reg-step-number">3</div>
               <div className="step-text">
                 <strong>Track Progress</strong>
                 <p>Monitor resolution status in real time</p>
