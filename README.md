@@ -370,7 +370,7 @@ Environment Variables: All backend .env variables
 | **Frontend** | https://nagar-sathi-phi.vercel.app |
 | **Backend** | https://nagarsathi-0xuy.onrender.com |
 
-> **Note:** Backend is on Render free tier — first request after inactivity may take 30-50 seconds (cold start). Use [UptimeRobot](https://uptimerobot.com) to keep it awake.
+> **Note:** Backend is on Render free tier — first request after inactivity may take 30-50 seconds (cold start).
 
 ---
 
