@@ -45,7 +45,7 @@ const AdminRequestPannel = () => {
     setActionLoading(id + action);
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/admin/requests/${id}/${action}`,
+        `${import.meta.env.VITE_API_URL}/admin-requests/${id}/${action}`,
         {
           method: "PATCH",
           headers: { Authorization: `Bearer ${token}` },

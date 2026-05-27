@@ -25,7 +25,7 @@ const Home = () => {
               <div className="profile-avatar">
                 {userName.charAt(0).toUpperCase()}
               </div>
-l
+              l
               <div>
                 <h3>{userName}</h3>
                 <span>{userRole}</span>
@@ -133,24 +133,57 @@ l
                       View Complaints
                     </Link>
                   </div>
+                  <div className="dashboard-card">
+                    <div className="card-icon">🛡️</div>
+
+                    <h3>Request Admin Access</h3>
+
+                    <p>
+                      Apply for administrative permissions to manage complaints
+                      and platform operations.
+                    </p>
+
+                    <Link to="/request-admin" className="card-btn">
+                      Request Access
+                    </Link>
+                  </div>
                 </>
               )}
 
               {userRole === "admin" && (
-                <div className="dashboard-card admin-card">
-                  <div className="card-icon">⚙️</div>
+                <>
+                  {/* Admin Dashboard Card */}
+                  <div className="dashboard-card admin-card">
+                    <div className="card-icon">⚙️</div>
 
-                  <h3>Admin Dashboard</h3>
+                    <h3>Admin Dashboard</h3>
 
-                  <p>
-                    Manage complaints, assign priorities, and monitor issue
-                    resolutions.
-                  </p>
+                    <p>
+                      Manage complaints, assign priorities, and monitor issue
+                      resolutions.
+                    </p>
 
-                  <Link to="/admin-dashboard" className="card-btn">
-                    Open Dashboard
-                  </Link>
-                </div>
+                    <Link to="/admin-dashboard" className="card-btn">
+                      Open Dashboard
+                    </Link>
+                  </div>
+
+                  {/* Admin Requests Card */}
+                  <div className="dashboard-card admin-card">
+                    <div className="card-icon">🛡️</div>
+
+                    <h3>Admin Requests</h3>
+
+                    <p>
+                      Review citizen admin access requests and approve or reject
+                      applications.
+                    </p>
+
+                    <Link to="/admin-requests" className="card-btn">
+                      Manage Requests
+                    </Link>
+                  </div>
+                </>
               )}
             </div>
           </div>

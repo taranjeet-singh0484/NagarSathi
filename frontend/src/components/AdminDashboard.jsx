@@ -262,9 +262,9 @@ const AdminDashboard = () => {
         <h1>Admin Dashboard</h1>
         <p>Manage and monitor all citizen complaints</p>
       </div>
-      <div className="section">
+      {/* <div className="section">
         <AdminRequestPanel />
-      </div>
+      </div> */}
 
       {/* Stats section */}
       <div className="dashboard-stats">
