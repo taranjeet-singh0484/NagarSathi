@@ -109,6 +109,20 @@ Personalized citizen assistant that:
 
 ---
 
+## 📸 Screenshots
+
+### Citizen Dashboard
+![Citizen complaints](./screenshots/citizenComplaints.png)
+
+### Admin Dashboard  
+![Admin Dashboard](/screenshots/adminDashboard.png)
+
+### Admin Home  
+![Admin Home](/screenshots/adminHome.png)
+
+### AI Chatbot
+![AI Chatbot](//screenshots/CitizenAIchatbot.png)
+
 ## 🚀 Getting Started
 
 ### Prerequisites
