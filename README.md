@@ -121,7 +121,7 @@ Personalized citizen assistant that:
 ![Admin Home](/screenshots/adminHome.png)
 
 ### AI Chatbot
-![AI Chatbot](//screenshots/CitizenAIchatbot.png)
+![AI Chatbot](/screenshots/CitizenAIchatbot.png)
 
 ## 🚀 Getting Started
 
