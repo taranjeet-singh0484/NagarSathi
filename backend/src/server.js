@@ -51,7 +51,10 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/uploads", express.static("uploads"));
+app.use(
+  "/uploads",
+  express.static(path.join(process.cwd(), "backend", "uploads")),
+);
 
 app.use("/api/complaints", complaintRoutes);
 app.use("/api/auth", authRoutes);

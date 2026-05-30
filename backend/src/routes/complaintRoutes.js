@@ -9,7 +9,7 @@ import {
 import { protect, requireRole } from "../middleware/auth.js";
 import fs from "fs";
 
-const uploadPath = path.join(process.cwd(), "uploads");
+const uploadPath = path.join(process.cwd(), "backend", "uploads");
 
 if (!fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath, { recursive: true });
@@ -17,7 +17,7 @@ if (!fs.existsSync(uploadPath)) {
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(process.cwd(), "uploads"));
+    cb(null, path.join(process.cwd(), "backend", "uploads"));
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
